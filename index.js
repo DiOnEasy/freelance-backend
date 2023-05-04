@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import multer from 'multer';
+import cors from 'cors'
 
 import { registerValidation, loginValidation } from './validations/auth.js';
 import { announcementCreateValidation } from './validations/annValidation.js';
@@ -32,6 +33,7 @@ const upload = multer({ storage })
 
 app.use(express.json());
 app.use('/uploads', express.static('uploads'))
+app.use(cors())
 
 app.get('/', (req, res) => {
     res.send('Hello nahui');
