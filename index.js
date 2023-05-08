@@ -50,10 +50,10 @@ app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
 });
 
 app.get('/announcements', announcementController.getAll);
-app.get('/announcements/:id', announcementController.getOne);
+app.get('/announce/:id', announcementController.getOne);
 app.post('/announcements', checkAuth, announcementCreateValidation, handleValidationErrors, announcementController.create);
-app.delete('/announcements/:id', checkAuth, announcementController.remove);
-app.patch('/announcements/:id', checkAuth, announcementCreateValidation, handleValidationErrors, announcementController.update);
+app.delete('/announce/:id', checkAuth, announcementController.remove);
+app.patch('/announce/:id', checkAuth, announcementCreateValidation, handleValidationErrors, announcementController.update);
 
 
 app.listen(4000, (err) => {
