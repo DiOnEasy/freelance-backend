@@ -86,13 +86,15 @@ export const remove = async (req, res) => {
 }
 
 export const create = async (req, res) => {
+    console.log(req)
     try {
         const doc = new AnnouncementModel({
             title: req.body.title,
             description: req.body.description,
-            tags: req.body.tags,
-            imageUrl: req.body.imageUrl,
+            timeLine: req.body.timeLine,
+            file: req.body.file,
             user: req.userId,
+            price: req.body.price,
         });
 
         const announcement = await doc.save()
@@ -117,9 +119,10 @@ export const update = async (req, res) => {
             {
                 title: req.body.title,
                 description: req.body.description,
-                tags: req.body.tags,
-                imageUrl: req.body.imageUrl,
+                timeLine: req.body.timeLine,
+                file: req.body.file,
                 user: req.userId,
+                price: req.body.price,
             },
         )
         res.json({

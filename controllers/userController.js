@@ -52,7 +52,6 @@ export const register = async (req, res) => {
         const doc = new UserModel({
             email: req.body.email,
             fullName: req.body.fullName,
-            avatarUrl: req.body.avatarUrl,
             passwordHash: hash,
         })
 
@@ -100,3 +99,45 @@ export const getMe = async (req, res) => {
         })
     }
 };
+
+export const updateMe = async (req, res) => {
+    try{
+        UserModel.findOneAndUpdate(
+            {
+                _id: req.userId,
+            },
+            {
+                nickName: req.body.nickName,
+                userProfession: req.body.userProfession,
+                userDescription: req.body.userDescription,
+                userCountry: req.body.userCountry,
+                avatar: req.body.avatar,
+            },
+            {
+                returnDocument: 'after',
+            },
+        )
+        .then((doc) => {
+            if (!doc) {
+                return res.status(404).json({
+                    message: 'Couldn`t find announcement'
+                })
+            }
+            res.json(doc)
+        })
+        .catch((err) => {
+            console.log(err)
+            return res.status(500).json({
+                message: 'Couldn`t return announcement',
+            })
+        })
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).json({
+            message: 'Couldn`t update user information',
+        })
+    }
+
+    
+}

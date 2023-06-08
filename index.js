@@ -10,6 +10,7 @@ import checkAuth from './utils/checkAuth.js';
 
 import * as userController from './controllers/userController.js'
 import * as announcementController from './controllers/announcementController.js'
+import * as taskController from './controllers/taskController.js'
 
 import handleValidationErrors from './utils/handleValidationErrors.js';
 
@@ -39,11 +40,17 @@ app.get('/', (req, res) => {
     res.send('Hello nahui');
 })
 
+app.post('/task', checkAuth, taskController.createTask)
+app.get('/orders', checkAuth, taskController.getOrders)
+app.patch('/orders/:id', checkAuth, taskController.submitOrderDev)
+
 app.post('/auth/login', loginValidation, handleValidationErrors, userController.login);
 app.post('/auth/register', registerValidation, handleValidationErrors, userController.register);
 app.get('/auth/me', checkAuth, userController.getMe);
+app.patch('/auth/me', checkAuth, userController.updateMe);
 
-app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
+
+app.post('/upload', checkAuth, upload.single('file'), (req, res) => {
     res.json({
         url: `/uploads/${req.file.originalname}`
     })

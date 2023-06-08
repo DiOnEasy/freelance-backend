@@ -9,9 +9,9 @@ const announcementSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    tags:{
-        type: Array,
-        default: [],
+    timeLine:{
+        type: Number,
+        required: true,
     },
     viewsNum:{
         type: Number,
@@ -22,7 +22,10 @@ const announcementSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
-    avatarUrl: String,
+    price:{
+        type: Number,
+        required: true,
+    },
 
 }, 
 {
