@@ -11,8 +11,11 @@ import checkAuth from './utils/checkAuth.js';
 import * as userController from './controllers/userController.js'
 import * as announcementController from './controllers/announcementController.js'
 import * as taskController from './controllers/taskController.js'
+import * as chatController from './controllers/chatController.js'
+import * as messageController from './controllers/messageController.js'
 
 import handleValidationErrors from './utils/handleValidationErrors.js';
+import { safely } from './helper.js';
 
 mongoose
     .connect('mongodb+srv://DiOnEasy:wwwwww@cluster0.oxv0cbk.mongodb.net/freelance-exchange?retryWrites=true&w=majority',)
@@ -62,6 +65,13 @@ app.post('/announcements', checkAuth, announcementCreateValidation, handleValida
 app.delete('/announce/:id', checkAuth, announcementController.remove);
 app.patch('/announce/:id', checkAuth, announcementCreateValidation, handleValidationErrors, announcementController.update);
 
+
+app.post('/chat', checkAuth, chatController.createChat);
+app.get('/chat', checkAuth, chatController.getChats);
+
+app.post('/message', checkAuth, safely(messageController.addMessage));
+app.get('/message/:id', checkAuth, safely(messageController.getMessages))
+app.get('/messages/:id', checkAuth, safely(messageController.getAllMessages))
 
 app.listen(4000, (err) => {
     if (err) {
