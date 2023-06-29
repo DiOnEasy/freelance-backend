@@ -2,6 +2,12 @@ import express from 'express';
 import mongoose from 'mongoose';
 import multer from 'multer';
 import cors from 'cors'
+import path from 'path'
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+
+const __dirname = path.dirname(__filename); 
 
 import { registerValidation, loginValidation } from './validations/auth.js';
 import { announcementCreateValidation } from './validations/annValidation.js';
@@ -39,39 +45,41 @@ app.use(express.json());
 app.use('/uploads', express.static('uploads'))
 app.use(cors())
 
-app.get('/', (req, res) => {
-    res.send('Hello nahui');
-})
+app.use(express.static(path.join(__dirname, 'build')));
 
-app.post('/task', checkAuth, taskController.createTask)
-app.get('/orders', checkAuth, taskController.getOrders)
-app.patch('/orders/:id', checkAuth, taskController.submitOrderDev)
+app.post('/api/task', checkAuth, taskController.createTask)
+app.get('/api/orders', checkAuth, taskController.getOrders)
+app.patch('/api/orders/:id', checkAuth, taskController.submitOrderDev)
 
-app.post('/auth/login', loginValidation, handleValidationErrors, userController.login);
-app.post('/auth/register', registerValidation, handleValidationErrors, userController.register);
-app.get('/auth/me', checkAuth, userController.getMe);
-app.patch('/auth/me', checkAuth, userController.updateMe);
+app.post('/api/auth/login', loginValidation, handleValidationErrors, userController.login);
+app.post('/api/auth/register', registerValidation, handleValidationErrors, userController.register);
+app.get('/api/auth/me', checkAuth, userController.getMe);
+app.patch('/api/auth/me', checkAuth, userController.updateMe);
 
 
-app.post('/upload', checkAuth, upload.single('file'), (req, res) => {
+app.post('/api/upload', checkAuth, upload.single('file'), (req, res) => {
     res.json({
         url: `/uploads/${req.file.originalname}`
     })
 });
 
-app.get('/announcements', announcementController.getAll);
-app.get('/announce/:id', announcementController.getOne);
-app.post('/announcements', checkAuth, announcementCreateValidation, handleValidationErrors, announcementController.create);
-app.delete('/announce/:id', checkAuth, announcementController.remove);
-app.patch('/announce/:id', checkAuth, announcementCreateValidation, handleValidationErrors, announcementController.update);
+app.get('/api/announcements', announcementController.getAll);
+app.get('/api/announce/:id', announcementController.getOne);
+app.post('/api/announcements', checkAuth, announcementCreateValidation, handleValidationErrors, announcementController.create);
+app.delete('/api/announce/:id', checkAuth, announcementController.remove);
+app.patch('/api/announce/:id', checkAuth, announcementCreateValidation, handleValidationErrors, announcementController.update);
 
 
-app.post('/chat', checkAuth, chatController.createChat);
-app.get('/chat', checkAuth, chatController.getChats);
+app.post('/api/chat', checkAuth, chatController.createChat);
+app.get('/api/chat', checkAuth, chatController.getChats);
 
-app.post('/message', checkAuth, safely(messageController.addMessage));
-app.get('/message/:id', checkAuth, safely(messageController.getMessages))
-app.get('/messages/:id', checkAuth, safely(messageController.getAllMessages))
+app.post('/api/message', checkAuth, safely(messageController.addMessage));
+app.get('/api/message/:id', checkAuth, safely(messageController.getMessages))
+app.get('/api/messages/:id', checkAuth, safely(messageController.getAllMessages))
+
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  });
 
 app.listen(4000, (err) => {
     if (err) {
